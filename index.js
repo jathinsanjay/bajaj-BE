@@ -1,11 +1,17 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 app.use(express.json());
-const port = 8000;
+
+// Use environment variable for port, fallback to 8000 if not set
+const port = process.env.PORT || 8000;
+
+// Endpoint to verify server is running
 app.get('/', (req, res) => {
-  res.send('hello world')
-})
-const  separateAlphabetsAndNumbers=(inputArray)=> {
+  res.send('hello world');
+});
+
+// Function to separate alphabets and numbers
+const separateAlphabetsAndNumbers = (inputArray) => {
     const numbers = [];
     const alphabets = [];
 
@@ -18,41 +24,43 @@ const  separateAlphabetsAndNumbers=(inputArray)=> {
     });
 
     return { numbers, alphabets };
-}
-const findHighestAlphabet=(alphabets)=> {
+};
+
+// Function to find the highest alphabet
+const findHighestAlphabet = (alphabets) => {
     if (alphabets.length === 0) return [];
 
     return alphabets.reduce((highest, current) => {
         return current.toLowerCase() > highest.toLowerCase() ? current : highest;
     });
-}
+};
 
+// POST endpoint for processing data
+app.post('/bfhl', (req, res) => {
+    const { data } = req.body;
 
-app.post('/bfhl',(req,res)=>{
-    const {data}=req.body;
-        try{
-          const {numbers,alphabets} = separateAlphabetsAndNumbers(data)
-          const highestAlphabet=findHighestAlphabet(alphabets)
-          res.status(200).json({
-            "is_success":true,
-            "user_id":"vaeez_mohamed_21112003",
-            "email" : "mv5552@srmist.edu.in",
-            "roll_number":"RA2111026010509",
-            "Number":numbers,
-            "Alphabets":alphabets,
-            "highest_alphabet":highestAlphabet
+    try {
+        const { numbers, alphabets } = separateAlphabetsAndNumbers(data);
+        const highestAlphabet = findHighestAlphabet(alphabets);
+        
+        res.status(200).json({
+            "is_success": true,
+            "user_id": "vaeez_mohamed_21112003",
+            "email": "mv5552@srmist.edu.in",
+            "roll_number": "RA2111026010509",
+            "Number": numbers,
+            "Alphabets": alphabets,
+            "highest_alphabet": highestAlphabet
+        });
+    } catch (e) {
+        res.status(500).json({
+            "is_success": false,
+            "error": "Internal server error"
+        });
+    }
+});
 
-          })
-
-        }
-        catch(e){
-            res.status(404).json({
-                Status:404,
-                error:"Internal server error"
-            })
-        }
-})
+// Start server
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
-    
-  })
+});
