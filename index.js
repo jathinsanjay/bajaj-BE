@@ -3,7 +3,9 @@ const cors= require("cors");
 
 const app = express();
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:3000'  // Adjust this to the front-end URL
+  }));
 
 // Use environment variable for port, fallback to 8000 if not set
 const port = process.env.PORT || 8000;
