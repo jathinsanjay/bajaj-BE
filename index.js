@@ -1,6 +1,9 @@
 const express = require('express');
+const cors= require("cors");
+
 const app = express();
 app.use(express.json());
+app.use(cors())
 
 // Use environment variable for port, fallback to 8000 if not set
 const port = process.env.PORT || 8000;
@@ -9,6 +12,11 @@ const port = process.env.PORT || 8000;
 app.get('/', (req, res) => {
   res.send('hello world');
 });
+app.get('/fhl',(req, res) => {
+    res.status(200).json({
+         
+    });
+  })
 
 // Function to separate alphabets and numbers
 const separateAlphabetsAndNumbers = (inputArray) => {
